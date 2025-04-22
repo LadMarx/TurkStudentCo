@@ -1,0 +1,27 @@
+TurkStudentCo Data Science Bootcamp – SQL Final Projesi Raporu
+
+Bu rapor, TurkStudentCo tarafından düzenlenen Data Science Bootcamp süresince geliştirilen SQL tabanlı veritabanı projesine ilişkin genel tasarımı, tercih edilen veri türlerini, normalizasyon uygulamalarını ve önerilen ek tablo yapısını açıklamaktadır. Veritabanı, çevrimiçi eğitim platformlarına yönelik düşünülerek yapılandırılmış ve temel veri bütünlüğü, ilişkisel yapı ve ölçeklenebilirlik kriterleri dikkate alınarak tasarlanmıştır.
+
+1. Uygun Veri Tipleri
+Veritabanı yapısında her tablonun kimliklendirilmesi açısından birincil anahtar (primary key) sütunları tanımlanmıştır. Bu sütunlarda veri tipleri olarak sistemin gereksinimlerine göre `smallserial`, `serial` ve `bigserial` türleri tercih edilmiştir. Bu tercihte, ilgili veri tiplerinin sistemde kapladığı alanlar dikkate alınmış ve performans açısından verimli bir yapı hedeflenmiştir.
+
+Ayrıca, veri bütünlüğünü sağlamak amacıyla bazı sütunların boş geçilemez (NOT NULL) olması gerektiği ve bazı alanların benzersiz (UNIQUE) olması gerektiği açıkça belirtilmiştir.
+
+Veri işlemlerinde hata toleransını azaltmak ve tutarlılığı korumak amacıyla transaction yapısı kullanılarak işlemler güvence altına alınmıştır.
+
+2. Normalizasyon
+Veritabanı tasarımında, veri tekrarını önlemek ve ilişkileri sağlıklı bir şekilde yönetmek için normalizasyon kurallarına uyulmuştur. Veritabanı içerisinde yer alması gereken temel tablolar incelenmiş ve gereksiz veri tekrarlarını önlemek amacıyla bazı veri grupları ayrıştırılmıştır.
+
+Mevcut yapıya ek olarak önerilen tablolar şunlardır:
+
+I) members_info: Üyelerin kişisel bilgilerinin tutulduğu bir alt tablo olarak yapılandırılmıştır. Ana members tablosu ile birebir ilişkilidir. Bu sayede veri gizliliği ve yönetilebilirliği artırılmıştır.
+
+II)categories_sub: Eğitim içeriklerinin alt kategorilerini saklamak amacıyla oluşturulmuştur. Bu tasarımda mevcut categories tablosu, categories_main olarak yeniden adlandırılmalı ve categories_sub tablosu ile ilişkilendirilmelidir. Alt kategori tablosunda UNIQUE(categories_main_id, categories_sub_id) kısıtlaması tanımlanarak tekrar eden veri girişleri engellenmiştir. Örnek bir yapı:
+
+(1, 1)
+(1, 2)
+(1, 3)
+
+III)instructors (mevcut): Eğitimleri veren eğitmen bilgilerini içeren tablodur. education tablosu ile ilişkili olup, eğitim detaylarının daha sağlıklı ve esnek bir şekilde yönetilmesini sağlar.
+
+
